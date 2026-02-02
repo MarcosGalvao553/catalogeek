@@ -33,7 +33,7 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Build do frontend
 WORKDIR /var/www/frontend
-RUN npm install && npm run build
+RUN npm install && npm run build-only
 
 # Copiar o build do frontend para o Laravel public
 RUN cp -r /var/www/frontend/dist/* /var/www/backend/public/
