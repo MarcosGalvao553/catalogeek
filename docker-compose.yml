@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: catalogeek_app
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www/backend
+      - ./frontend:/var/www/frontend
+    ports:
+      - "8400:80"
+    environment:
+     - DB_HOST=164.92.67.204
+     - DB_PORT=3307
+     - DB_DATABASE=nerdrop
+     - DB_USERNAME=root
+     - DB_PASSWORD=DropNOlemq10w
+
+    networks:
+      - catalogeek
+
+  frontend-dev:
+    image: node:20-alpine
+    container_name: catalogeek_frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - catalogeek
+
+networks:
+  catalogeek:
+    driver: bridge
+

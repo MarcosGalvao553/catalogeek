@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: catalogeek_prod
+    restart: unless-stopped
+    working_dir: /var/www/backend
+    ports:
+      - "8400:80"
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_HOST=164.92.67.204
+      - DB_PORT=3307
+      - DB_DATABASE=nerdrop
+      - DB_USERNAME=root
+      - DB_PASSWORD=DropNOlemq10w
+      - QUEUE_CONNECTION=database
+      - CACHE_DRIVER=database
+    volumes:
+      - ./backend/storage:/var/www/backend/storage
+      - ./backend/.env:/var/www/backend/.env
+    networks:
+      - catalogeek
+
+networks:
+  catalogeek:
+    driver: bridge
