@@ -22,7 +22,6 @@ services:
       - CACHE_DRIVER=database
     volumes:
       - ./backend/storage:/var/www/backend/storage
-      - ./backend/.env:/var/www/backend/.env
     networks:
       - catalogeek
 
