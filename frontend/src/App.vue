@@ -64,10 +64,10 @@
             </div>
           </div>
           
-          <p v-if="batchInfo" class="batch-info">
+          <!-- <p v-if="batchInfo" class="batch-info">
             <span class="batch-current">{{ batchInfo.completed }}</span> de 
             <span class="batch-total">{{ batchInfo.total }}</span> lotes processados
-          </p>
+          </p> -->
         </div>
 
         <div v-if="success" class="success-message">
@@ -152,7 +152,7 @@ export default {
           total: data.total_batches
         };
 
-        this.statusMessage = `Processando ${data.total_products} produtos em ${data.total_batches} lotes...`;
+        this.statusMessage = `Processando ${data.total_products} produtos...`;
         
         // Verificar progresso periodicamente
         this.progressInterval = setInterval(() => {

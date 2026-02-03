@@ -79,10 +79,10 @@ class CatalogController extends Controller
         // Filtrar por estoque
         if (!$request->showStock) {
             // Não mostrar produtos sem estoque
-            $query->where('stock', '>', 0)->where('price_atacado', '>', 0);
+            $query->where('stock', '>', 0);
         }
 
-        $products = $query->orderBy('name')->limit(10)->get();
+        $products = $query->orderBy('name')->get();
         
         if ($products->isEmpty()) {
             return response()->json([
