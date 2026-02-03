@@ -127,7 +127,7 @@ export default {
       
       try {
         // Iniciar geração assíncrona
-        const response = await fetch('http://localhost:8000/api/catalog/generate-async', {
+        const response = await fetch('/api/catalog/generate-async', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -174,7 +174,7 @@ export default {
       if (!this.sessionId) return;
 
       try {
-        const response = await fetch(`http://localhost:8000/api/catalog/progress/${this.sessionId}`);
+        const response = await fetch(`/api/catalog/progress/${this.sessionId}`);
         
         if (!response.ok) {
           throw new Error('Erro ao verificar progresso');
@@ -213,7 +213,7 @@ export default {
       if (!this.sessionId) return;
 
       try {
-        const response = await fetch(`http://localhost:8000/api/catalog/download/${this.sessionId}`);
+        const response = await fetch(`/api/catalog/download/${this.sessionId}`);
         
         if (!response.ok) {
           throw new Error('Catálogo ainda não está pronto. Por favor, aguarde.');
