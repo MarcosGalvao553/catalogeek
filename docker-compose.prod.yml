@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     working_dir: /var/www/backend
     ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS (se quiser SSL no futuro)
       - "8400:80"
     environment:
       - APP_ENV=production
