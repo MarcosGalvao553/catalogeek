@@ -4,25 +4,30 @@
 echo "Aguardando banco de dados..."
 sleep 5
 
-# Executar migrations
+# Criar diretórios necessários PRIMEIRO
 cd /var/www/backend
-php artisan migrate --force
+mkdir -p storage/app/private/temp_catalogs
+mkdir -p storage/framework/cache/data
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/views
+mkdir -p storage/logs
+mkdir -p bootstrap/cache
+mkdir -p /var/log/supervisor
 
-# Criar link simbólico do storage
-php artisan storage:link
+# Ajustar permissões
+chown -R www-data:www-data storage
+chown -R www-data:www-data bootstrap/cache
 
-# Limpar e cachear configurações
+# AGORA pode cachear configurações
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Criar diretórios necessários
-mkdir -p /var/www/backend/storage/app/private/temp_catalogs
-mkdir -p /var/log/supervisor
+# Executar migrations
+php artisan migrate --force
 
-# Ajustar permissões
-chown -R www-data:www-data /var/www/backend/storage
-chown -R www-data:www-data /var/www/backend/bootstrap/cache
+# Criar link simbólico do storage
+php artisan storage:link
 
 # Iniciar Supervisor (que gerencia nginx, php-fpm e queue worker)
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

@@ -2,6 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Não definir rotas web - o frontend Vue cuida disso
+// A rota / será servida pelo index.html do Vue no public/
