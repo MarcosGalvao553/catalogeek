@@ -77,10 +77,10 @@ class CatalogController extends Controller
         }
 
         // Filtrar por estoque
-        if (!$request->showStock) {
+        // if (!$request->showStock) {
             // Não mostrar produtos sem estoque
             $query->where('stock', '>', 0);
-        }
+        // }
 
         $products = $query->orderBy('name')->get();
         
@@ -174,6 +174,35 @@ class CatalogController extends Controller
             return response()->json([
                 'error' => 'Catálogo não encontrado ou ainda sendo processado'
             ], 404);
+        }
+        
+        // Comprimir o PDF antes do download
+        $compressedFile = storage_path("app/private/temp_catalogs/compressed_{$sessionId}.pdf");
+        
+        try {
+            // Usar Ghostscript para comprimir o PDF
+            $command = sprintf(
+                'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=%s %s',
+                escapeshellarg($compressedFile),
+                escapeshellarg($finalFile)
+            );
+            
+            exec($command, $output, $returnCode);
+            
+            // Se a compressão foi bem-sucedida e o arquivo existe
+            if ($returnCode === 0 && file_exists($compressedFile) && filesize($compressedFile) > 0) {
+                \Log::info("PDF compressed successfully. Original: " . filesize($finalFile) . " bytes, Compressed: " . filesize($compressedFile) . " bytes");
+                
+                // Deletar o arquivo original e renomear o comprimido
+                @unlink($finalFile);
+                rename($compressedFile, $finalFile);
+            } else {
+                \Log::warning("PDF compression failed or not available, using original file");
+                @unlink($compressedFile);
+            }
+        } catch (\Exception $e) {
+            \Log::warning("Error compressing PDF: " . $e->getMessage() . ", using original file");
+            @unlink($compressedFile);
         }
         
         return response()->download($finalFile, 'catalogo-produtos.pdf')->deleteFileAfterSend(true);
